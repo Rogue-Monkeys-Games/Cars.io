@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class Car : MonoBehaviour
 {
-
+    [SerializeField] private Color carColor;
     private const string HORIZONTAL = "Horizontal";
     private const string VERTICAL = "Vertical";
 
@@ -82,6 +82,25 @@ public class NewBehaviourScript : MonoBehaviour
 ; wheelCollider.GetWorldPose(out pos, out rot);
         wheelTransform.rotation = rot;
         wheelTransform.position = pos;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Cell"))
+        {
+            collision.gameObject.TryGetComponent<Renderer>(out Renderer renderer);
+            renderer.material.color = carColor;
+
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.CompareTag("Cell"))
+        {
+            collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody rb);
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.None;
+        }
     }
 
 }
